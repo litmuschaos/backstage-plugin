@@ -22,3 +22,13 @@ TBD
    litmus:
      apiToken: LITMUS_AUTH_TOKEN
    ```
+3. Adding annotations and values to your component file.
+   ```yaml
+   apiVersion: backstage.io/v1alpha1
+   kind: Component
+   metadata:
+     name: component-name
+     description: 'description'
+     annotations:
+       litmuschaos.io/project-id: 'your-own-project-id'
+   ```

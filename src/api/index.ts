@@ -6,19 +6,14 @@ import {
 import { ResponseError } from '@backstage/errors';
 import { ExperimentRunsStats } from '../types/ExperimentsRunStats';
 import { getExperimentRunStatsQuery } from '../queries/getExperimentRunStatsQuery';
-import { Project } from '../types/Project';
 
 const baseEndpoint = '/litmus';
 const litmusApiEndpoint = baseEndpoint + '/api';
-const litmusAuthEndpoint = baseEndpoint + '/auth';
-const litmusGetOwnerProjectsEndpoint =
-  litmusAuthEndpoint + '/get_owner_projects';
 
 export interface LitmusApi {
   getExperimentRunStats(options: {
     projectID: string;
   }): Promise<ExperimentRunsStats | undefined>;
-  getOwnerProject(): Promise<Project | undefined>;
 }
 
 export const litmusApiRef = createApiRef<LitmusApi>({
@@ -84,18 +79,5 @@ export class LitmusApiClient implements LitmusApi {
       litmusApiEndpoint,
       requestOptions,
     );
-  }
-
-  async getOwnerProject(): Promise<Project | undefined> {
-    const requestOptions: RequestInit = {
-      method: 'GET',
-      redirect: 'follow',
-    };
-
-    const projects = await this.callApi<Project[]>(
-      litmusGetOwnerProjectsEndpoint,
-      requestOptions,
-    );
-    return projects?.[0];
   }
 }

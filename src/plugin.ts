@@ -8,8 +8,9 @@ import {
   discoveryApiRef,
   fetchApiRef,
 } from '@backstage/core-plugin-api';
-
+import { Entity } from '@backstage/catalog-model';
 import { LitmusApiClient, litmusApiRef } from './api';
+import { LITMUS_PROJECT_ID } from './components/useLitmusAppData';
 
 const apiTokenConfig = 'litmus.apiToken';
 
@@ -60,3 +61,6 @@ export const EntityLitmusCard = litmusPlugin.provide(
     },
   }),
 );
+
+export const isLitmusAvailable = (entity: Entity) =>
+  Boolean(entity?.metadata.annotations?.[LITMUS_PROJECT_ID]);

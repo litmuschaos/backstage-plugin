@@ -1,14 +1,21 @@
-import { ErrorBoundary, InfoCard } from '@backstage/core-components';
-import { LinearProgress } from '@material-ui/core';
+import {
+  ErrorBoundary,
+  InfoCard,
+  MissingAnnotationEmptyState,
+} from '@backstage/core-components';
+import { useEntity } from '@backstage/plugin-catalog-react';
 import React from 'react';
+import { isLitmusAvailable } from '../../plugin';
+import { LITMUS_PROJECT_ID, useLitmusAppData } from '../useLitmusAppData';
 
 export const EntityLitmusCard = () => {
-  // TODO: Add isLitmusAvailable();
-  return (
+  const { entity } = useEntity();
+  const { projectID } = useLitmusAppData({ entity });
+  return !isLitmusAvailable(entity) ? (
+    <MissingAnnotationEmptyState annotation={LITMUS_PROJECT_ID} />
+  ) : (
     <ErrorBoundary>
-      <InfoCard title="Litmus">
-        <LinearProgress />
-      </InfoCard>
+      <InfoCard title="Litmus">{projectID}</InfoCard>
     </ErrorBoundary>
   );
 };
