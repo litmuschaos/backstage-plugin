@@ -1,12 +1,12 @@
 import React from 'react';
 import { createDevApp } from '@backstage/dev-utils';
-import { litmusPlugin, LitmusPage } from '../src/plugin';
+import { litmusPlugin, LitmusDashboardPage } from '../src/plugin';
 
 createDevApp()
   .registerPlugin(litmusPlugin)
   .addPage({
-    element: <LitmusPage />,
+    element: <LitmusDashboardPage />,
     title: 'Root Page',
-    path: '/litmus'
+    path: '/litmus',
   })
   .render();

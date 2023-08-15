@@ -1,1 +1,1 @@
-export { litmusPlugin, LitmusPage } from './plugin';
+export { litmusPlugin, EntityLitmusContent, EntityLitmusCard } from './plugin';
