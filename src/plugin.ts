@@ -1,5 +1,4 @@
 import {
-  configApiRef,
   createApiFactory,
   createComponentExtension,
   createPlugin,
@@ -11,8 +10,6 @@ import {
 import { Entity } from '@backstage/catalog-model';
 import { LitmusApiClient, litmusApiRef } from './api';
 import { LITMUS_PROJECT_ID } from './components/useLitmusAppData';
-
-const apiTokenConfig = 'litmus.apiToken';
 
 export const entityContentRouteRef = createRouteRef({
   id: 'Litmus Entity Content',
@@ -29,13 +26,11 @@ export const litmusPlugin = createPlugin({
       deps: {
         discoveryApi: discoveryApiRef,
         fetchApi: fetchApiRef,
-        configApi: configApiRef,
       },
-      factory: ({ discoveryApi, fetchApi, configApi }) =>
+      factory: ({ discoveryApi, fetchApi }) =>
         new LitmusApiClient({
           discoveryApi,
           fetchApi,
-          apiToken: configApi.getString(apiTokenConfig),
         }),
     }),
   ],

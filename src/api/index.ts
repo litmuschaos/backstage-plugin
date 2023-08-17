@@ -4,16 +4,28 @@ import {
   createApiRef,
 } from '@backstage/core-plugin-api';
 import { ResponseError } from '@backstage/errors';
-import { ExperimentRunsStats } from '../types/ExperimentsRunStats';
+import {
+  ExperimentRunsStats,
+  GetExperimentRunsStatsResponse,
+} from '../types/ExperimentsRunStats';
 import { getExperimentRunStatsQuery } from '../queries/getExperimentRunStatsQuery';
+import {
+  BasicStats,
+  GetBasicStatsResponse,
+  responseToBasicStats,
+} from '../types/BasicStats';
+import { getBasicStatsQuery } from '../queries/getBasicStatsQuery';
 
 const baseEndpoint = '/litmus';
-const litmusApiEndpoint = baseEndpoint + '/api';
+const litmusApiEndpoint = baseEndpoint + '/api/query';
 
 export interface LitmusApi {
   getExperimentRunStats(options: {
     projectID: string;
   }): Promise<ExperimentRunsStats | undefined>;
+  getBasicStats(options: {
+    projectID: string;
+  }): Promise<BasicStats | undefined>;
 }
 
 export const litmusApiRef = createApiRef<LitmusApi>({
@@ -23,29 +35,24 @@ export const litmusApiRef = createApiRef<LitmusApi>({
 export type Options = {
   discoveryApi: DiscoveryApi;
   fetchApi: FetchApi;
-  apiToken: string;
 };
 
 export class LitmusApiClient implements LitmusApi {
   private readonly discoveryApi: DiscoveryApi;
   private readonly fetchApi: FetchApi;
-  private readonly apiToken: string;
 
   constructor(options: Options) {
     this.discoveryApi = options.discoveryApi;
     this.fetchApi = options.fetchApi;
-    this.apiToken = options.apiToken;
   }
 
   private async callApi<T>(
     endpoint: string,
     requestOptions: RequestInit,
   ): Promise<T | undefined> {
-    const headers = new Headers();
-
-    headers.append('Content-Type', 'application/json');
-    headers.append('Authorization', 'Bearer ' + this.apiToken);
-    requestOptions.headers = headers;
+    requestOptions.headers = new Headers({
+      'Content-Type': 'application/json',
+    });
 
     const apiUrl = `${
       (await this.discoveryApi.getBaseUrl('proxy')) + endpoint
@@ -75,9 +82,32 @@ export class LitmusApiClient implements LitmusApi {
       redirect: 'follow',
     };
 
-    return await this.callApi<ExperimentRunsStats>(
+    const response = await this.callApi<GetExperimentRunsStatsResponse>(
       litmusApiEndpoint,
       requestOptions,
     );
+    return response?.data.getExperimentRunStats;
+  }
+
+  async getBasicStats(options: {
+    projectID: string;
+  }): Promise<BasicStats | undefined> {
+    const requestOptions: RequestInit = {
+      method: 'POST',
+      body: JSON.stringify({
+        query: getBasicStatsQuery,
+        variables: {
+          projectID: options.projectID,
+        },
+      }),
+      redirect: 'follow',
+    };
+
+    const response = await this.callApi<GetBasicStatsResponse>(
+      litmusApiEndpoint,
+      requestOptions,
+    );
+
+    return responseToBasicStats(response);
   }
 }
