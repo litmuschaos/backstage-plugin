@@ -8,6 +8,8 @@ Check out [proposal](https://docs.google.com/document/d/1_ePJ36DwFrhFPhcxhxXX__y
 
 ## Features
 
+![Litmus Overview Card](./docs/litmus-overview-card.png)
+
 TBD
 
 ## Prerequisite
@@ -17,12 +19,18 @@ TBD
    ```yaml
    proxy:
      '/litmus':
-       target: 'https://litmus.namkyupark.tech'
+       target: 'your-own-litmus-ui-url'
        changeOrigin: true
+       headers:
+         Authorization: Bearer ${LITMUS_AUTH_TOKEN}
    litmus:
-     apiToken: LITMUS_AUTH_TOKEN
+     baseURL: 'your-own-litmus-ui-url'
    ```
-3. Adding annotations and values to your component file.
+3. Add your auth key to the environmental variables
+   ```shell
+   export LITMUS_AUTH_TOKEN="your-own-token"
+   ```
+4. Adding annotations and values to your component file.
    ```yaml
    apiVersion: backstage.io/v1alpha1
    kind: Component
@@ -31,4 +39,21 @@ TBD
      description: 'description'
      annotations:
        litmuschaos.io/project-id: 'your-own-project-id'
+   ```
+5. Enabling frontend
+   ```ts
+   // packages/app/src/components/catalog/EntityPage.tsx
+   const overviewContent = (
+     <Grid container spacing={6} alignItems="stretch">
+       // ...
+       <EntitySwitch>
+         <EntitySwitch.Case if={isLitmusAvailable}>
+           <Grid item md={4} xs={12}>
+             <EntityLitmusCard />
+           </Grid>
+         </EntitySwitch.Case>
+       </EntitySwitch>
+       // ...
+     </Grid>
+   );
    ```

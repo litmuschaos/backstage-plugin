@@ -6,3 +6,9 @@ export type ExperimentRunsStats = {
   totalStoppedExperimentRuns: number;
   totalErroredExperimentRuns: number;
 };
+
+export type GetExperimentRunsStatsResponse = {
+  data: {
+    getExperimentRunStats: ExperimentRunsStats;
+  };
+};

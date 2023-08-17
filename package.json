@@ -29,6 +29,9 @@
     "@material-ui/core": "^4.12.2",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "4.0.0-alpha.61",
+    "@mui/x-charts": "^6.0.0-alpha.7",
+    "install": "^0.13.0",
+    "npm": "^9.8.1",
     "react-use": "^17.2.4"
   },
   "peerDependencies": {
@@ -53,6 +56,8 @@
     "prettier": "^3.0.1"
   },
   "files": [
-    "dist"
-  ]
+    "dist",
+    "config.d.ts"
+  ],
+  "configSchema": "config.d.ts"
 }
