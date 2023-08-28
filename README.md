@@ -1,6 +1,8 @@
 # backstage-plugin
 
-> This plugin not published yet
+> This plugin not published yet.
+
+> Compatible only with Litmus version 3.0 or later.
 
 ## Plan
 
@@ -24,7 +26,8 @@ TBD
        headers:
          Authorization: Bearer ${LITMUS_AUTH_TOKEN}
    litmus:
-     baseURL: 'your-own-litmus-ui-url'
+     baseUrl: 'your-own-litmus-ui-url'
+     apiToken: ${LITMUS_AUTH_TOKEN}
    ```
 3. Add your auth key to the environmental variables
    ```shell
@@ -41,6 +44,7 @@ TBD
        litmuschaos.io/project-id: 'your-own-project-id'
    ```
 5. Enabling frontend
+
    ```ts
    // packages/app/src/components/catalog/EntityPage.tsx
    const overviewContent = (
@@ -55,5 +59,15 @@ TBD
        </EntitySwitch>
        // ...
      </Grid>
+   );
+   // ...
+   const serviceEntityPage = (
+     <EntityLayout>
+       // ...
+       <EntityLayout.Route path="/litmus" title="Litmus">
+         <EntityLitmusContent />
+       </EntityLayout.Route>
+       // ...
+     </EntityLayout>
    );
    ```

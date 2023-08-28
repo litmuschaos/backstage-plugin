@@ -40,8 +40,8 @@ export const EntityLitmusContent = litmusPlugin.provide(
   createRoutableExtension({
     name: 'EntityLitmusContent',
     component: () =>
-      import('./components/EntityLitmusContent').then(
-        m => m.EntityLitmusContent,
+      import('./components/LitmusContentWrapper').then(
+        m => m.LitmusContentWrapper,
       ),
     mountPoint: entityContentRouteRef,
   }),

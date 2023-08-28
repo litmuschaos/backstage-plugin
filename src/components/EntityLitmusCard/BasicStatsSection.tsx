@@ -6,7 +6,7 @@ import useAsync from 'react-use/lib/useAsync';
 import { BasicStats } from '../../types/BasicStats';
 import { litmusApiRef } from '../../api';
 import { useApi } from '@backstage/core-plugin-api';
-import { Box, Grid, Typography } from '@material-ui/core';
+import { Box, Grid, Typography, makeStyles } from '@material-ui/core';
 import Stack from '@mui/material/Stack';
 
 export const BasicStatsSection = ({ entity }: { entity: Entity }) => {
@@ -32,34 +32,53 @@ export const BasicStatsSection = ({ entity }: { entity: Entity }) => {
   }
   return (
     <Box>
-      <Grid container spacing={3} alignItems="center" alignContent="center">
-        <Grid item xs={6}>
-          <StatCard title="Infras" value={value?.totalInfrastructure} />
-        </Grid>
-        <Grid item xs={6}>
-          <StatCard title="GitOps" value={value?.gitOps ? 'Yes' : 'No'} />
-        </Grid>
-        <Grid item xs={6}>
+      <Grid container spacing={2} alignItems="center" alignContent="center">
+        <Grid item xs={7}>
           <StatCard title="ChaosHubs" value={value?.totalChaosHubs} />
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={5}>
+          <StatCard title="Infras" value={value?.totalInfrastructure} />
+        </Grid>
+        <Grid item xs={7}>
           <StatCard title="Experiments" value={value?.totalExperiments} />
+        </Grid>
+        <Grid item xs={5}>
+          <StatCard title="GitOps" value={value?.gitOps ? 'YES' : 'NO'} />
         </Grid>
       </Grid>
     </Box>
   );
 };
 
+const useStyles = makeStyles(theme => ({
+  value: {
+    fontWeight: 'bold',
+    fontSize: '36px',
+    overflow: 'hidden',
+    wordBreak: 'break-word',
+  },
+  label: {
+    color: theme.palette.text.secondary,
+    textTransform: 'uppercase',
+    fontSize: '10px',
+    fontWeight: 'bold',
+    letterSpacing: 0.5,
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+  },
+}));
+
 const StatCard = ({ title, value }: { title: string; value: ReactNode }) => {
+  const classes = useStyles();
   return (
     <Stack direction="column" spacing={2} width="100%" textAlign="center">
       <Box>
-        <Typography align="center" variant="button">
+        <Typography align="center" className={classes.label}>
           {title}
         </Typography>
       </Box>
       <Box>
-        <Typography align="center" variant="h3">
+        <Typography align="center" className={classes.value}>
           {value}
         </Typography>
       </Box>

@@ -1,9 +1,16 @@
+// https://backstage.io/docs/conf/defining/
 export interface Config {
   litmus: {
     /**
-     * The base url of the litmus instance.
+     * The api token of the litmus instance.
      * @visibility frontend
      */
-    baseURL: string;
+    apiToken: string;
+
+    /**
+     * Frontend root URL
+     * @visibility frontend
+     */
+    baseUrl: string;
   };
 }
