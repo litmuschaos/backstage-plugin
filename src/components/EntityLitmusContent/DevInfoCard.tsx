@@ -12,6 +12,7 @@ import ScienceIcon from '@mui/icons-material/Science';
 import LogoDevIcon from '@mui/icons-material/LogoDev';
 import ArticleIcon from '@mui/icons-material/Article';
 import PeopleIcon from '@mui/icons-material/People';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { useStyles } from './styles';
 
 const litmusAPIDocsURL =
@@ -19,6 +20,7 @@ const litmusAPIDocsURL =
 const litmusDocsURL = 'https://docs.litmuschaos.io/';
 const litmusExperimentDocsURL = 'https://litmuschaos.github.io/litmus/';
 const litmusCommunityURL = 'https://slack.litmuschaos.io/';
+const litmusChaosHubURL = 'https://hub.litmuschaos.io/';
 
 const DevInfoItem = ({
   icon,
@@ -41,7 +43,6 @@ const DevInfoItem = ({
 
 export const DevInfoCard = () => {
   const classes = useStyles();
-
   return (
     <InfoCard title="Dev Info" className={classes.gridItemCard}>
       <List component="nav" aria-label="mailbox folders">
@@ -61,6 +62,12 @@ export const DevInfoCard = () => {
           icon={<ArticleIcon />}
           link={litmusDocsURL}
           title="Litmus Docs"
+        />
+        <Divider light />
+        <DevInfoItem
+          icon={<ShoppingCartIcon />}
+          link={litmusChaosHubURL}
+          title="Litmus ChaosHub"
         />
         <Divider light />
         <DevInfoItem

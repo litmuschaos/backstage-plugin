@@ -27,6 +27,12 @@ import {
   responseToEnvironments,
 } from '../types/Environment';
 import { getEnvironmentsQuery } from '../queries/getEnvironmentsQueryt';
+import {
+  Experiment,
+  GetExperimentsResponse,
+  responseToExperiments,
+} from '../types/Experiment';
+import { getExperimentsQuery } from '../queries/getExperimentsQuery';
 
 const baseEndpoint = '/litmus';
 const litmusApiEndpoint = baseEndpoint + '/api/query';
@@ -42,6 +48,9 @@ export interface LitmusApi {
   getEnvironments(options: {
     projectID: string;
   }): Promise<Environment[] | undefined>;
+  getExperiments(options: {
+    projectID: string;
+  }): Promise<Experiment[] | undefined>;
 }
 
 export const litmusApiRef = createApiRef<LitmusApi>({
@@ -171,5 +180,28 @@ export class LitmusApiClient implements LitmusApi {
     );
 
     return responseToEnvironments(response);
+  }
+
+  async getExperiments(options: {
+    projectID: string;
+  }): Promise<Experiment[] | undefined> {
+    const requestOptions: RequestInit = {
+      method: 'POST',
+      body: JSON.stringify({
+        query: getExperimentsQuery,
+        variables: {
+          projectID: options.projectID,
+          request: {},
+        },
+      }),
+      redirect: 'follow',
+    };
+
+    const response = await this.callApi<GetExperimentsResponse>(
+      litmusApiEndpoint,
+      requestOptions,
+    );
+
+    return responseToExperiments(response);
   }
 }

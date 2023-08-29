@@ -1,13 +1,13 @@
 import React from 'react';
 import { Grid } from '@material-ui/core';
-import { InfoCard } from '@backstage/core-components';
 import { DevInfoCard } from './DevInfoCard';
 import { ChaosHubsCard } from './ChaosHubsCard';
 import { EnvironmentsCard } from './EnvironmentsCard';
+import { ExperimentsCard } from './ExperimentsCard';
 
 export const EntityLitmusContent = () => {
   return (
-    <Grid container spacing={3} alignItems="stretch">
+    <Grid container spacing={2} alignItems="stretch">
       <Grid item md={3}>
         <DevInfoCard />
       </Grid>
@@ -18,7 +18,7 @@ export const EntityLitmusContent = () => {
         <EnvironmentsCard />
       </Grid>
       <Grid item md={12}>
-        <InfoCard title="Experiment Runs" />
+        <ExperimentsCard />
       </Grid>
     </Grid>
   );

@@ -1,5 +1,4 @@
 import {
-  InfoCard,
   StatusOK,
   StatusError,
   Table,
@@ -16,8 +15,6 @@ import { useEntity } from '@backstage/plugin-catalog-react';
 import { ChaosHub } from '../../types/ChaosHub';
 import { useStyles } from './styles';
 import { Typography } from '@material-ui/core';
-
-const litmusChaosHubURL = 'https://hub.litmuschaos.io/';
 
 const columns: TableColumn[] = [
   { field: 'name', title: 'name', width: '80%' },
@@ -59,7 +56,7 @@ export const ChaosHubsCard = () => {
         underline="none"
         color="inherit"
       >
-        <Typography noWrap>
+        <Typography noWrap style={{ fontSize: 'inherit' }}>
           {hub.isAvailable ? <StatusOK /> : <StatusError />}
           {hub.name}
         </Typography>
@@ -70,23 +67,19 @@ export const ChaosHubsCard = () => {
   }));
 
   return (
-    <InfoCard
-      title="ChaosHubs"
-      deepLink={{ title: 'Go to Docs', link: litmusChaosHubURL }}
-      className={classes.gridItemCard}
-      noPadding
-    >
+    <div className={classes.gridItemCard}>
       <Table
+        title="ChaosHubs"
         options={{
           search: false,
+          minBodyHeight: '370px',
           paging: true,
           pageSizeOptions: [5],
-          toolbar: false,
           padding: 'dense',
         }}
         data={data || []}
         columns={columns}
       />
-    </InfoCard>
+    </div>
   );
 };

@@ -1,4 +1,4 @@
-import { InfoCard, Link, Table, TableColumn } from '@backstage/core-components';
+import { Link, Table, TableColumn } from '@backstage/core-components';
 import React from 'react';
 import { LITMUS_PROJECT_ID, useLitmusAppData } from '../useLitmusAppData';
 import { ErrorPanel, Progress } from '@backstage/core-components';
@@ -45,9 +45,8 @@ export const EnvironmentsCard = () => {
     name: (
       <Link
         to={
-          // TODO: fix link to id
           configApi.getString('litmus.baseUrl') +
-          `/account/${accountID}/project/${projectID}/environments/${env.name}/kubernetes`
+          `/account/${accountID}/project/${projectID}/environments/${env.environmentID}/kubernetes`
         }
         target="_blank"
         underline="none"
@@ -89,18 +88,19 @@ export const EnvironmentsCard = () => {
   }));
 
   return (
-    <InfoCard title="Environments" className={classes.gridItemCard} noPadding>
+    <div className={classes.gridItemCard}>
       <Table
+        title="Environments"
         options={{
+          minBodyHeight: '370px',
           search: false,
           paging: true,
           pageSizeOptions: [5],
-          toolbar: false,
           padding: 'dense',
         }}
         data={data || []}
         columns={columns}
       />
-    </InfoCard>
+    </div>
   );
 };
