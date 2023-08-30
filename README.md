@@ -10,13 +10,18 @@ Check out [proposal](https://docs.google.com/document/d/1_ePJ36DwFrhFPhcxhxXX__y
 
 ## Features
 
-![Litmus Overview Card](./docs/litmus-overview-card.png)
+### EntityLitmusCard
 
-TBD
+![EntityLitmusCard](./docs/EntityLitmusCard.png)
+
+### EntityLitmusContent
+
+![EntityLitmusContent](./docs/EntityLitmusContent.png)
 
 ## Prerequisite
 
-1. Get Litmus Auth Token in the cookie
+1. Get Litmus Auth Token in the localStorage(accessToken)
+   > Issuing API token UI will be provided later.
 2. In the `app-config.yaml` file root directory, add litmus proxy and info like below
    ```yaml
    proxy:
