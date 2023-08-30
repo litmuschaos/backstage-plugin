@@ -1,10 +1,28 @@
 {
   "name": "backstage-plugin-litmus",
-  "version": "0.1.0",
+  "description": "Litmus Plugin for Backstage",
+  "keywords": [
+    "litmus",
+    "litmuschaos",
+    "backstage",
+    "plugin",
+    "backstage-plugin"
+  ],
+  "homepage": "https://github.com/litmuschaos/backstage-plugin",
+  "bugs": {
+    "url": "https://github.com/litmuschaos/backstage-plugin/issues"
+  },
+  "contributors": [
+    "Namkyu Park <lak9348@gmail.com> (https://github.com/namkyu1999)"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/litmuschaos/backstage-plugin.git"
+  },
+  "version": "0.2.0",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "license": "Apache-2.0",
-  "private": true,
   "publishConfig": {
     "access": "public",
     "main": "dist/index.esm.js",
@@ -26,11 +44,18 @@
     "@backstage/core-components": "^0.13.3",
     "@backstage/core-plugin-api": "^1.5.3",
     "@backstage/theme": "^0.4.1",
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
     "@material-ui/core": "^4.12.2",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "4.0.0-alpha.61",
+    "@mui/icons-material": "^5.14.6",
+    "@mui/material": "^5.14.6",
     "@mui/x-charts": "^6.0.0-alpha.7",
+    "cron-parser": "^4.9.0",
     "install": "^0.13.0",
+    "jwt-decode": "^3.1.2",
+    "lodash-es": "^4.17.21",
     "npm": "^9.8.1",
     "react-use": "^17.2.4"
   },
@@ -45,6 +70,7 @@
     "@testing-library/jest-dom": "^5.10.1",
     "@testing-library/react": "^12.1.3",
     "@testing-library/user-event": "^14.0.0",
+    "@types/lodash-es": "^4.17.6",
     "@types/node": "*",
     "@typescript-eslint/eslint-plugin": "^6.3.0",
     "@typescript-eslint/parser": "^6.3.0",
@@ -52,6 +78,7 @@
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.0",
     "eslint-plugin-react": "^7.33.1",
+    "eslint-plugin-you-dont-need-lodash-underscore": "^6.12.0",
     "msw": "^1.0.0",
     "prettier": "^3.0.1"
   },

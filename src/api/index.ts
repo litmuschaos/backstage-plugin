@@ -15,6 +15,24 @@ import {
   responseToBasicStats,
 } from '../types/BasicStats';
 import { getBasicStatsQuery } from '../queries/getBasicStatsQuery';
+import {
+  ChaosHub,
+  GetChaosHubsResponse,
+  responseToChaosHubs,
+} from '../types/ChaosHub';
+import { getChaosHubsQuery } from '../queries/getChaosHubsQuery';
+import {
+  Environment,
+  GetEnvironmentsResponse,
+  responseToEnvironments,
+} from '../types/Environment';
+import { getEnvironmentsQuery } from '../queries/getEnvironmentsQueryt';
+import {
+  Experiment,
+  GetExperimentsResponse,
+  responseToExperiments,
+} from '../types/Experiment';
+import { getExperimentsQuery } from '../queries/getExperimentsQuery';
 
 const baseEndpoint = '/litmus';
 const litmusApiEndpoint = baseEndpoint + '/api/query';
@@ -26,6 +44,13 @@ export interface LitmusApi {
   getBasicStats(options: {
     projectID: string;
   }): Promise<BasicStats | undefined>;
+  getChaosHubs(options: { projectID: string }): Promise<ChaosHub[] | undefined>;
+  getEnvironments(options: {
+    projectID: string;
+  }): Promise<Environment[] | undefined>;
+  getExperiments(options: {
+    projectID: string;
+  }): Promise<Experiment[] | undefined>;
 }
 
 export const litmusApiRef = createApiRef<LitmusApi>({
@@ -109,5 +134,74 @@ export class LitmusApiClient implements LitmusApi {
     );
 
     return responseToBasicStats(response);
+  }
+
+  async getChaosHubs(options: {
+    projectID: string;
+  }): Promise<ChaosHub[] | undefined> {
+    const requestOptions: RequestInit = {
+      method: 'POST',
+      body: JSON.stringify({
+        query: getChaosHubsQuery,
+        variables: {
+          projectID: options.projectID,
+          request: {},
+        },
+      }),
+      redirect: 'follow',
+    };
+
+    const response = await this.callApi<GetChaosHubsResponse>(
+      litmusApiEndpoint,
+      requestOptions,
+    );
+
+    return responseToChaosHubs(response);
+  }
+
+  async getEnvironments(options: {
+    projectID: string;
+  }): Promise<Environment[] | undefined> {
+    const requestOptions: RequestInit = {
+      method: 'POST',
+      body: JSON.stringify({
+        query: getEnvironmentsQuery,
+        variables: {
+          projectID: options.projectID,
+          request: {},
+        },
+      }),
+      redirect: 'follow',
+    };
+
+    const response = await this.callApi<GetEnvironmentsResponse>(
+      litmusApiEndpoint,
+      requestOptions,
+    );
+
+    return responseToEnvironments(response);
+  }
+
+  async getExperiments(options: {
+    projectID: string;
+  }): Promise<Experiment[] | undefined> {
+    const requestOptions: RequestInit = {
+      method: 'POST',
+      body: JSON.stringify({
+        query: getExperimentsQuery,
+        variables: {
+          projectID: options.projectID,
+          request: {},
+        },
+      }),
+      redirect: 'follow',
+    };
+
+    const response = await this.callApi<GetExperimentsResponse>(
+      litmusApiEndpoint,
+      requestOptions,
+    );
+
+    return responseToExperiments(response);
   }
 }

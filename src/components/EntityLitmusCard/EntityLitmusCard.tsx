@@ -15,7 +15,7 @@ import { BasicStatsSection } from './BasicStatsSection';
 export const EntityLitmusCard = () => {
   const { entity } = useEntity();
   const configApi = useApi(configApiRef);
-  const litmusURL = configApi.getString('litmus.baseURL');
+  const litmusURL = configApi.getString('litmus.baseUrl');
   return isLitmusAvailable(entity) ? (
     <ErrorBoundary>
       <InfoCard

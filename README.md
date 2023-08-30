@@ -1,6 +1,8 @@
 # backstage-plugin
 
-> This plugin not published yet
+> This plugin not published yet.
+
+> Compatible only with Litmus version 3.0 or later.
 
 ## Plan
 
@@ -8,13 +10,18 @@ Check out [proposal](https://docs.google.com/document/d/1_ePJ36DwFrhFPhcxhxXX__y
 
 ## Features
 
-![Litmus Overview Card](./docs/litmus-overview-card.png)
+### EntityLitmusCard
 
-TBD
+![EntityLitmusCard](./docs/EntityLitmusCard.png)
+
+### EntityLitmusContent
+
+![EntityLitmusContent](./docs/EntityLitmusContent.png)
 
 ## Prerequisite
 
-1. Get Litmus Auth Token in the cookie
+1. Get Litmus Auth Token in the localStorage(accessToken)
+   > Issuing API token UI will be provided later.
 2. In the `app-config.yaml` file root directory, add litmus proxy and info like below
    ```yaml
    proxy:
@@ -24,7 +31,8 @@ TBD
        headers:
          Authorization: Bearer ${LITMUS_AUTH_TOKEN}
    litmus:
-     baseURL: 'your-own-litmus-ui-url'
+     baseUrl: 'your-own-litmus-ui-url'
+     apiToken: ${LITMUS_AUTH_TOKEN}
    ```
 3. Add your auth key to the environmental variables
    ```shell
@@ -41,6 +49,7 @@ TBD
        litmuschaos.io/project-id: 'your-own-project-id'
    ```
 5. Enabling frontend
+
    ```ts
    // packages/app/src/components/catalog/EntityPage.tsx
    const overviewContent = (
@@ -55,5 +64,15 @@ TBD
        </EntitySwitch>
        // ...
      </Grid>
+   );
+   // ...
+   const serviceEntityPage = (
+     <EntityLayout>
+       // ...
+       <EntityLayout.Route path="/litmus" title="Litmus">
+         <EntityLitmusContent />
+       </EntityLayout.Route>
+       // ...
+     </EntityLayout>
    );
    ```
