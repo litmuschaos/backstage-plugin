@@ -1,12 +1,10 @@
 # backstage-plugin
 
-> This plugin not published yet.
+[![npm version](https://badge.fury.io/js/backstage-plugin-litmus.svg)](https://badge.fury.io/js/backstage-plugin-litmus)
+
+> This plugin not published yet. (Available after this [PR](https://github.com/litmuschaos/litmus/pull/4138) is merged)
 
 > Compatible only with Litmus version 3.0 or later.
-
-## Plan
-
-Check out [proposal](https://docs.google.com/document/d/1_ePJ36DwFrhFPhcxhxXX__yiNzW1KDL83L2lfF8oIcA/edit?usp=sharing)
 
 ## Features
 
@@ -20,9 +18,15 @@ Check out [proposal](https://docs.google.com/document/d/1_ePJ36DwFrhFPhcxhxXX__y
 
 ## Prerequisite
 
-1. Get Litmus Auth Token in the localStorage(accessToken)
-   > Issuing API token UI will be provided later.
-2. In the `app-config.yaml` file root directory, add litmus proxy and info like below
+1. In the `./packages/app` project add the plugin.
+
+   ```yaml
+   yarn add backstage-plugin-litmus
+   ```
+
+2. Get Litmus Auth Token in the localStorage(accessToken)
+   > Issuing API token UI will be provided later on Litmus UI.
+3. In the `app-config.yaml` file root directory, add litmus proxy and info like below
    ```yaml
    proxy:
      '/litmus':
@@ -34,11 +38,11 @@ Check out [proposal](https://docs.google.com/document/d/1_ePJ36DwFrhFPhcxhxXX__y
      baseUrl: 'your-own-litmus-ui-url'
      apiToken: ${LITMUS_AUTH_TOKEN}
    ```
-3. Add your auth key to the environmental variables
+4. Add your auth key to the environmental variables
    ```shell
    export LITMUS_AUTH_TOKEN="your-own-token"
    ```
-4. Adding annotations and values to your component file.
+5. Adding annotations and values to your component file.
    ```yaml
    apiVersion: backstage.io/v1alpha1
    kind: Component
@@ -48,10 +52,16 @@ Check out [proposal](https://docs.google.com/document/d/1_ePJ36DwFrhFPhcxhxXX__y
      annotations:
        litmuschaos.io/project-id: 'your-own-project-id'
    ```
-5. Enabling frontend
+6. Enabling frontend
 
    ```ts
    // packages/app/src/components/catalog/EntityPage.tsx
+   import {
+     isLitmusAvailable,
+     EntityLitmusCard,
+     EntityLitmusContent,
+   } from 'backstage-plugin-litmus';
+   // ...
    const overviewContent = (
      <Grid container spacing={6} alignItems="stretch">
        // ...
@@ -76,3 +86,7 @@ Check out [proposal](https://docs.google.com/document/d/1_ePJ36DwFrhFPhcxhxXX__y
      </EntityLayout>
    );
    ```
+
+---
+
+> This plugin is based on [proposal documentation](https://docs.google.com/document/d/1_ePJ36DwFrhFPhcxhxXX__yiNzW1KDL83L2lfF8oIcA/edit?usp=sharing)

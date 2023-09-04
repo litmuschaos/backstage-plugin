@@ -84,7 +84,11 @@ export class LitmusApiClient implements LitmusApi {
     }`;
     const response = await this.fetchApi.fetch(apiUrl, requestOptions);
     if (response.status === 200) {
-      return (await response.json()) as T;
+      const json = await response.json();
+      if (json.errors) {
+        throw new Error(json.errors[0].message);
+      }
+      return json as T;
     }
     if (!response.ok) {
       throw await ResponseError.fromResponse(response);
