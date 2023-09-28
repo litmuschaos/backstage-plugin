@@ -8,13 +8,14 @@ import {
 import React from 'react';
 import { LITMUS_PROJECT_ID, useLitmusAppData } from '../useLitmusAppData';
 import { ErrorPanel, Progress } from '@backstage/core-components';
-import useAsync from 'react-use/lib/useAsync';
+import { useAsyncRetry } from 'react-use';
 import { litmusApiRef } from '../../api';
 import { configApiRef, useApi } from '@backstage/core-plugin-api';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import { ChaosHub } from '../../types/ChaosHub';
 import { useStyles } from './styles';
 import { Typography } from '@material-ui/core';
+import SyncIcon from '@mui/icons-material/Sync';
 
 const columns: TableColumn[] = [
   { field: 'name', title: 'name', width: '80%' },
@@ -28,7 +29,7 @@ export const ChaosHubsCard = () => {
   const configApi = useApi(configApiRef);
   const { projectID, accountID } = useLitmusAppData({ entity });
   const litmusApi = useApi(litmusApiRef);
-  const { value, loading, error } = useAsync(async (): Promise<
+  const { value, loading, error, retry } = useAsyncRetry(async (): Promise<
     ChaosHub[] | undefined
   > => {
     const chaosHubs: Promise<ChaosHub[] | undefined> = litmusApi.getChaosHubs({
@@ -69,7 +70,15 @@ export const ChaosHubsCard = () => {
   return (
     <div className={classes.gridItemCard}>
       <Table
-        title="ChaosHubs"
+        title="Chaos Hubs"
+        actions={[
+          {
+            icon: () => <SyncIcon />,
+            tooltip: 'Refresh',
+            isFreeAction: true,
+            onClick: retry,
+          },
+        ]}
         options={{
           search: false,
           minBodyHeight: '370px',

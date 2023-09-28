@@ -33,6 +33,7 @@ import {
   responseToExperiments,
 } from '../types/Experiment';
 import { getExperimentsQuery } from '../queries/getExperimentsQuery';
+import { runChaosExperimentQuery } from '../queries/runChaosExperimentQuery';
 
 const baseEndpoint = '/litmus';
 const litmusApiEndpoint = baseEndpoint + '/api/query';
@@ -51,6 +52,10 @@ export interface LitmusApi {
   getExperiments(options: {
     projectID: string;
   }): Promise<Experiment[] | undefined>;
+  runChaosExperiment(options: {
+    experimentID: string;
+    projectID: string;
+  }): Promise<void | undefined>;
 }
 
 export const litmusApiRef = createApiRef<LitmusApi>({
@@ -207,5 +212,28 @@ export class LitmusApiClient implements LitmusApi {
     );
 
     return responseToExperiments(response);
+  }
+
+  async runChaosExperiment(options: {
+    experimentID: string;
+    projectID: string;
+  }): Promise<void | undefined> {
+    const requestOptions: RequestInit = {
+      method: 'POST',
+      body: JSON.stringify({
+        query: runChaosExperimentQuery,
+        variables: {
+          projectID: options.projectID,
+          experimentID: options.experimentID,
+          request: {},
+        },
+      }),
+      redirect: 'follow',
+    };
+
+    await this.callApi<GetExperimentsResponse>(
+      litmusApiEndpoint,
+      requestOptions,
+    );
   }
 }

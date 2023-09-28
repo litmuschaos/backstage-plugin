@@ -13,8 +13,21 @@ import { useEntity } from '@backstage/plugin-catalog-react';
 import { Link } from '@backstage/core-components';
 import { configApiRef, useApi } from '@backstage/core-plugin-api';
 import { useLitmusAppData } from '../useLitmusAppData';
+import {
+  Avatar,
+  Box,
+  Chip,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  Paper,
+  Popper,
+  Typography,
+} from '@mui/material';
+import { timeDifference } from '../../utils';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(theme => ({
   statusHeatMap: {
     display: 'flex',
     alignItems: 'end',
@@ -86,6 +99,57 @@ const useStyles = makeStyles(() => ({
       },
     },
   },
+  popper: {
+    zIndex: 1,
+    '&[x-placement*="bottom"] $arrow': {
+      top: 0,
+      left: 0,
+      marginTop: '-0.9em',
+      width: '3em',
+      height: '1em',
+      '&::before': {
+        borderWidth: '0 1em 1em 1em',
+        borderColor: `transparent transparent ${theme.palette.background.paper} transparent`,
+      },
+    },
+    '&[x-placement*="top"] $arrow': {
+      bottom: 0,
+      left: 0,
+      marginBottom: '-0.9em',
+      width: '3em',
+      height: '1em',
+      '&::before': {
+        borderWidth: '1em 1em 0 1em',
+        borderColor: `${theme.palette.background.paper} transparent transparent transparent`,
+      },
+    },
+    '&[x-placement*="right"] $arrow': {
+      left: 0,
+      marginLeft: '-0.9em',
+      height: '3em',
+      width: '1em',
+      '&::before': {
+        borderWidth: '1em 1em 1em 0',
+        borderColor: `transparent ${theme.palette.background.paper} transparent transparent`,
+      },
+    },
+    '&[x-placement*="left"] $arrow': {
+      right: 0,
+      marginRight: '-0.9em',
+      height: '3em',
+      width: '1em',
+      '&::before': {
+        borderWidth: '1em 0 1em 1em',
+        borderColor: `transparent transparent transparent ${theme.palette.background.paper}`,
+      },
+    },
+  },
+  paper: {
+    width: '300px',
+    maxWidth: 400,
+    overflow: 'auto',
+    backgroundColor: '#17293F',
+  },
 }));
 
 function StatusIcon({ status }: StatusIcon): React.ReactElement {
@@ -102,7 +166,7 @@ function StatusIcon({ status }: StatusIcon): React.ReactElement {
     case ExperimentRunStatus.RUNNING:
       return <MoreHorizIcon style={{ color: '#ffffff', fontSize: '12px' }} />;
     case ExperimentRunStatus.QUEUED:
-      return <PauseIcon style={{ fontSize: 12, color: '#9d8ed6' }} />;
+      return <PauseIcon style={{ color: '#9d8ed6', fontSize: 12 }} />;
     case ExperimentRunStatus.STOPPED:
       return (
         <StopCircleOutlinedIcon
@@ -113,6 +177,76 @@ function StatusIcon({ status }: StatusIcon): React.ReactElement {
       return (
         <NotInterestedOutlinedIcon
           sx={{ color: '#383946', fontSize: '12px' }}
+        />
+      );
+  }
+}
+
+function StatusChip({ status }: StatusIcon): React.ReactElement {
+  switch (status) {
+    case ExperimentRunStatus.COMPLETED:
+      return (
+        <Chip
+          icon={<CheckCircleIcon style={{ color: 'white' }} />}
+          label="Complete"
+          style={{ backgroundColor: '#1b841d', color: 'white' }}
+        />
+      );
+    case ExperimentRunStatus.COMPLETED_WITH_PROBE_FAILURE:
+    case ExperimentRunStatus.COMPLETED_WITH_ERROR: // <!-- needed for backwards compatibility -->
+      return (
+        <Chip
+          label="Failure"
+          icon={<ErrorIcon style={{ color: 'white' }} />}
+          style={{ backgroundColor: '#ff832b', color: 'white' }}
+        />
+      );
+    case ExperimentRunStatus.ERROR:
+      return (
+        <Chip
+          icon={<CancelIcon style={{ color: 'white' }} />}
+          label="Error"
+          style={{ backgroundColor: '#da291d', color: 'white' }}
+        />
+      );
+    case ExperimentRunStatus.TIMEOUT:
+      return (
+        <Chip
+          icon={<AccessTimeIcon style={{ color: 'white' }} />}
+          label="Timeout"
+          style={{ backgroundColor: '#da291d', color: 'white' }}
+        />
+      );
+    case ExperimentRunStatus.RUNNING:
+      return (
+        <Chip
+          icon={<MoreHorizIcon style={{ color: 'black' }} />}
+          label="Running"
+          style={{ backgroundColor: '#ffffff', color: 'black' }}
+        />
+      );
+    case ExperimentRunStatus.QUEUED:
+      return (
+        <Chip
+          icon={<PauseIcon style={{ color: 'white' }} />}
+          label="Queued"
+          style={{ backgroundColor: '#9d8ed6', color: 'white' }}
+        />
+      );
+    case ExperimentRunStatus.STOPPED:
+      return (
+        <Chip
+          icon={<StopCircleOutlinedIcon style={{ color: 'white' }} />}
+          label="Stopped"
+          style={{ backgroundColor: '#383946', color: 'white' }}
+        />
+      );
+    default:
+      return (
+        <Chip
+          icon={<NotInterestedOutlinedIcon sx={{ color: 'white' }} />}
+          label="N/A"
+          style={{ backgroundColor: '#383946', color: 'white' }}
         />
       );
   }
@@ -152,13 +286,163 @@ export function StatusHeatMap(props: StatusHeatMapProps): React.ReactElement {
   }
 
   function StatusCell({ execution }: StatusCell): React.ReactElement {
+    const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
+    const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>) => {
+      setAnchorEl(event.currentTarget);
+    };
+
+    const handlePopoverClose = () => {
+      setAnchorEl(null);
+    };
+
+    const open = Boolean(anchorEl);
     return (
       <div
         data-state={execution?.phase?.replace(/ /g, '_').toLowerCase()}
         className={classes.statusHeatMapCell}
+        aria-owns={open ? 'mouse-over-popover' : undefined}
+        aria-haspopup="true"
+        onMouseEnter={handlePopoverOpen}
+        onMouseLeave={handlePopoverClose}
       >
         {!hideIconForStatus(execution.phase) && (
-          <StatusIcon status={execution.phase} />
+          <div>
+            <StatusIcon status={execution.phase} />
+            <Popper
+              id="mouse-over-popover"
+              sx={{
+                pointerEvents: 'none',
+              }}
+              open={open}
+              anchorEl={anchorEl}
+              className={classes.popper}
+            >
+              <Paper className={classes.paper}>
+                <List sx={{ width: '100%', maxWidth: 300 }}>
+                  <ListItem>
+                    <Box sx={{ width: '45%' }}>
+                      <ListItemText
+                        primary={
+                          <React.Fragment>
+                            <Typography
+                              sx={{ display: 'inline' }}
+                              component="span"
+                              variant="body2"
+                              color="white"
+                              display="inline"
+                            >
+                              Resilience Score:
+                            </Typography>
+                          </React.Fragment>
+                        }
+                      />
+                    </Box>
+                    <Box sx={{ width: '55%' }}>
+                      <ListItemText
+                        primary={
+                          <React.Fragment>
+                            <Typography
+                              sx={{ display: 'inline' }}
+                              component="span"
+                              variant="h6"
+                              color="#D24433"
+                              display="inline"
+                            >
+                              {execution.resiliencyScore.toString() + ' '}
+                            </Typography>
+                            <Typography
+                              sx={{ display: 'inline' }}
+                              component="span"
+                              variant="body2"
+                              color="white"
+                              display="inline"
+                            >
+                              / 100
+                            </Typography>
+                          </React.Fragment>
+                        }
+                      />
+                    </Box>
+                  </ListItem>
+                  <ListItem>
+                    <Box sx={{ width: '45%' }}>
+                      <ListItemText
+                        primary={
+                          <React.Fragment>
+                            <Typography
+                              sx={{ display: 'inline' }}
+                              component="span"
+                              variant="body2"
+                              color="white"
+                              display="inline"
+                            >
+                              Status:
+                            </Typography>
+                          </React.Fragment>
+                        }
+                      />
+                    </Box>
+                    <Box sx={{ width: '55%' }}>
+                      <StatusChip status={execution.phase} />
+                    </Box>
+                  </ListItem>
+                  <ListItem>
+                    <Box sx={{ width: '45%' }}>
+                      <ListItemText
+                        primary={
+                          <React.Fragment>
+                            <Typography
+                              sx={{ display: 'inline' }}
+                              component="span"
+                              variant="body2"
+                              color="white"
+                              display="inline"
+                            >
+                              Executed by:
+                            </Typography>
+                          </React.Fragment>
+                        }
+                      />
+                    </Box>
+                    <ListItemAvatar>
+                      <Avatar />
+                    </ListItemAvatar>
+                    <ListItemText
+                      primary={
+                        <React.Fragment>
+                          <Typography
+                            sx={{ display: 'inline' }}
+                            component="span"
+                            variant="body2"
+                            color="white"
+                            display="inline"
+                          >
+                            {execution.updatedBy.username}
+                          </Typography>
+                        </React.Fragment>
+                      }
+                      secondary={
+                        <React.Fragment>
+                          <Typography
+                            sx={{ display: 'inline' }}
+                            component="span"
+                            variant="caption"
+                            fontSize="0.6rem"
+                            color="white"
+                          >
+                            {timeDifference(
+                              new Date().getTime(),
+                              Number(execution.updatedAt),
+                            )}
+                          </Typography>
+                        </React.Fragment>
+                      }
+                    />
+                  </ListItem>
+                </List>
+              </Paper>
+            </Popper>
+          </div>
         )}
       </div>
     );

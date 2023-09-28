@@ -19,6 +19,10 @@ query listExperiment($projectID: ID!, $request: ListExperimentRequest!) {
         experimentRunID
         phase
         resiliencyScore
+        updatedAt
+        updatedBy {
+          username
+        }
       }
     }
   }
