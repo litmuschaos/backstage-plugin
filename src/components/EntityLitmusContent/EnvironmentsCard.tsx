@@ -2,13 +2,14 @@ import { Link, Table, TableColumn } from '@backstage/core-components';
 import React from 'react';
 import { LITMUS_PROJECT_ID, useLitmusAppData } from '../useLitmusAppData';
 import { ErrorPanel, Progress } from '@backstage/core-components';
-import useAsync from 'react-use/lib/useAsync';
+import { useAsyncRetry } from 'react-use';
 import { litmusApiRef } from '../../api';
 import { configApiRef, useApi } from '@backstage/core-plugin-api';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import { useStyles } from './styles';
 import { Environment } from '../../types/Environment';
 import { Chip } from '@material-ui/core';
+import SyncIcon from '@mui/icons-material/Sync';
 
 const columns: TableColumn[] = [
   { field: 'name', title: 'name', width: '50%' },
@@ -23,7 +24,7 @@ export const EnvironmentsCard = () => {
   const configApi = useApi(configApiRef);
   const { projectID, accountID } = useLitmusAppData({ entity });
   const litmusApi = useApi(litmusApiRef);
-  const { value, loading, error } = useAsync(async (): Promise<
+  const { value, loading, error, retry } = useAsyncRetry(async (): Promise<
     Environment[] | undefined
   > => {
     const environments: Promise<Environment[] | undefined> =
@@ -91,6 +92,14 @@ export const EnvironmentsCard = () => {
     <div className={classes.gridItemCard}>
       <Table
         title="Environments"
+        actions={[
+          {
+            icon: () => <SyncIcon />,
+            tooltip: 'Refresh',
+            isFreeAction: true,
+            onClick: retry,
+          },
+        ]}
         options={{
           minBodyHeight: '370px',
           search: false,

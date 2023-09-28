@@ -2,9 +2,7 @@
 
 [![npm version](https://badge.fury.io/js/backstage-plugin-litmus.svg)](https://badge.fury.io/js/backstage-plugin-litmus)
 
-> This plugin not published yet. (Available after this [PR](https://github.com/litmuschaos/litmus/pull/4138) is merged)
-
-> Compatible only with Litmus version 3.0 or later.
+> Compatible only with Litmus version [3.0.0-beta12](https://github.com/litmuschaos/litmus/releases/tag/3.0.0-beta12) or later.
 
 ## Features
 
@@ -24,8 +22,15 @@
    yarn add backstage-plugin-litmus
    ```
 
-2. Get Litmus Auth Token in the localStorage(accessToken)
-   > Issuing API token UI will be provided later on Litmus UI.
+2. Get Litmus API Token through the Litmus UI
+
+   1. Click "SETTINGS" in the sidebar.
+   2. Click "+ New Token" Button in the 'API Tokens' section.
+      ![settings_tab](./docs/settings_tab.png)
+   3. Enter your information and click "Confirm".
+      ![create_dialog](./docs/create_dialog.png)
+   4. Get the token in the "VALUE" column.
+
 3. In the `app-config.yaml` file root directory, add litmus proxy and info like below
    ```yaml
    proxy:
@@ -33,7 +38,7 @@
        target: 'your-own-litmus-ui-url'
        changeOrigin: true
        headers:
-         Authorization: Bearer ${LITMUS_AUTH_TOKEN}
+         Authorization: 'Bearer ${LITMUS_AUTH_TOKEN}'
    litmus:
      baseUrl: 'your-own-litmus-ui-url'
      apiToken: ${LITMUS_AUTH_TOKEN}
