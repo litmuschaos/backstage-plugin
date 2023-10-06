@@ -15,6 +15,7 @@
 ## Before you begin
 
 - Compatible only with Litmus version [3.0.0](https://github.com/litmuschaos/litmus/releases/tag/3.0.0) or later.
+- Please visit our [documentation site](https://docs.litmuschaos.io/docs/integrations/backstage) to get a detailed guide.
 
 ## Getting started
 
