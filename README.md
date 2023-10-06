@@ -2,8 +2,6 @@
 
 [![npm version](https://badge.fury.io/js/backstage-plugin-litmus.svg)](https://badge.fury.io/js/backstage-plugin-litmus)
 
-> Compatible only with Litmus version [3.0.0](https://github.com/litmuschaos/litmus/releases/tag/3.0.0) or later.
-
 ## Features
 
 ### EntityLitmusCard
@@ -14,7 +12,11 @@
 
 ![EntityLitmusContent](./docs/EntityLitmusContent.png)
 
-## Prerequisite
+## Before you begin
+
+- Compatible only with Litmus version [3.0.0](https://github.com/litmuschaos/litmus/releases/tag/3.0.0) or later.
+
+## Getting started
 
 1. In the `./packages/app` project add the plugin.
 
