@@ -265,25 +265,35 @@ export interface StatusHeatMapProps {
   experimentID: string;
 }
 
+function hideIconForStatus(experimentRunStatus: ExperimentRunStatus): boolean {
+  switch (experimentRunStatus) {
+    case ExperimentRunStatus.COMPLETED:
+    case ExperimentRunStatus.COMPLETED_WITH_PROBE_FAILURE:
+    case ExperimentRunStatus.COMPLETED_WITH_ERROR:
+    case ExperimentRunStatus.NA:
+      return true;
+    default:
+      return false;
+  }
+}
+
+function hidePopperForStatus(
+  experimentRunStatus: ExperimentRunStatus,
+): boolean {
+  switch (experimentRunStatus) {
+    case ExperimentRunStatus.NA:
+      return true;
+    default:
+      return false;
+  }
+}
+
 export function StatusHeatMap(props: StatusHeatMapProps): React.ReactElement {
   const classes = useStyles();
   const { data, experimentID } = props;
   const { entity } = useEntity();
   const configApi = useApi(configApiRef);
   const { projectID, accountID } = useLitmusAppData({ entity });
-  function hideIconForStatus(
-    experimentRunStatus: ExperimentRunStatus,
-  ): boolean {
-    switch (experimentRunStatus) {
-      case ExperimentRunStatus.COMPLETED:
-      case ExperimentRunStatus.COMPLETED_WITH_PROBE_FAILURE:
-      case ExperimentRunStatus.COMPLETED_WITH_ERROR:
-      case ExperimentRunStatus.NA:
-        return true;
-      default:
-        return false;
-    }
-  }
 
   function StatusCell({ execution }: StatusCell): React.ReactElement {
     const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
@@ -308,6 +318,10 @@ export function StatusHeatMap(props: StatusHeatMapProps): React.ReactElement {
         {!hideIconForStatus(execution.phase) && (
           <div>
             <StatusIcon status={execution.phase} />
+          </div>
+        )}
+        {!hidePopperForStatus(execution.phase) && (
+          <div>
             <Popper
               id="mouse-over-popover"
               sx={{
