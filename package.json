@@ -40,6 +40,7 @@
     "prepack": "backstage-cli package prepack",
     "postpack": "backstage-cli package postpack"
   },
+  "packageManager": "yarn@3.6.4",
   "dependencies": {
     "@backstage/core-components": "^0.13.3",
     "@backstage/core-plugin-api": "^1.5.3",
