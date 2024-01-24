@@ -21,6 +21,9 @@ const useStyles = makeStyles(theme => ({
     overflow: 'hidden',
     whiteSpace: 'nowrap',
   },
+  noExperimentRuns: {
+    fontWeight: 'bold',
+  },
 }));
 
 export const ExperimentRunStatsSection = ({ entity }: { entity: Entity }) => {
@@ -44,11 +47,13 @@ export const ExperimentRunStatsSection = ({ entity }: { entity: Entity }) => {
   if (error) {
     return <ErrorPanel title={error.name} defaultExpanded error={error} />;
   }
+
+  const total = value?.totalExperimentRuns ?? 0;
   const completed = value?.totalCompletedExperimentRuns ?? 0;
   const running = value?.totalRunningExperimentRuns ?? 0;
   const errored = value?.totalErroredExperimentRuns ?? 0;
-  const other =
-    (value?.totalExperimentRuns ?? 0) - errored - completed - running;
+  const stopped = value?.totalStoppedExperimentRuns ?? 0;
+  const terminated = value?.totalTerminatedExperimentRuns?? 0;
 
   return (
     <Box>
@@ -58,39 +63,45 @@ export const ExperimentRunStatsSection = ({ entity }: { entity: Entity }) => {
             Experiment Runs
           </Typography>
         </Box>
-        <Box>
-          <PieChart
-            series={[
-              {
-                data: [
-                  {
-                    value: completed,
-                    color: '#4dc952',
-                    label: 'Completed',
-                  },
-                  {
-                    value: running,
-                    color: '#5b43ba',
-                    label: 'Running',
-                  },
-                  {
-                    value: errored,
-                    color: '#e43426',
-                    label: 'Errored',
-                  },
-                  {
-                    value: other ?? 0,
-                    color: '#d9d9d9',
-                    label: 'Other',
-                  },
-                ],
-              },
-            ]}
-            legend={{ hidden: true }}
-            margin={{ right: 5 }}
-            height={160}
-          />
-        </Box>
+        {
+          total === 0 ? (<Typography className={classes.noExperimentRuns}>There are no Chaos Experiments Runs in your project</Typography>):(<Box>
+            <PieChart
+              series={[
+                {
+                  data: [
+                    {
+                      value: completed,
+                      color: '#4dc952',
+                      label: 'Completed',
+                    },
+                    {
+                      value: running,
+                      color: '#5b43ba',
+                      label: 'Running',
+                    },
+                    {
+                      value: errored,
+                      color: '#e43426',
+                      label: 'Errored',
+                    },
+                    {
+                      value: stopped,
+                      color: '#d9d9d9',
+                      label: 'Stopped',
+                    },
+                    {
+                      value: terminated,
+                      color: '#d9d9d9',
+                      label: 'Terminated',
+                    },
+                  ],
+                },
+              ]}
+              legend={{ hidden: true }}
+              margin={{ right: 5 }}
+              height={160}
+            />
+          </Box>)}
       </Stack>
     </Box>
   );
