@@ -54,7 +54,7 @@ export const ExperimentRunStatsSection = ({ entity }: { entity: Entity }) => {
   const errored = value?.totalErroredExperimentRuns ?? 0;
   const stopped = value?.totalStoppedExperimentRuns ?? 0;
   const terminated = value?.totalTerminatedExperimentRuns?? 0;
-
+  const others = total - (completed + running + errored + stopped + terminated);
   return (
     <Box>
       <Stack direction="column" spacing={2} width="100%" textAlign="center">
@@ -93,6 +93,11 @@ export const ExperimentRunStatsSection = ({ entity }: { entity: Entity }) => {
                       value: terminated,
                       color: '#d9d9d9',
                       label: 'Terminated',
+                    },
+                    {
+                      value: others >= 0 ? others : 0,
+                      color: '#f6832c',
+                      label: 'Others',
                     },
                   ],
                 },

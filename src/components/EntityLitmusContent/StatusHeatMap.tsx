@@ -362,7 +362,7 @@ export function StatusHeatMap(props: StatusHeatMapProps): React.ReactElement {
                               color="#D24433"
                               display="inline"
                             >
-                              {execution.resiliencyScore.toString() + ' '}
+                              {(execution.resiliencyScore ?? 0).toString() + ' '}
                             </Typography>
                             <Typography
                               sx={{ display: 'inline' }}
