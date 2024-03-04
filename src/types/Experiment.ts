@@ -47,7 +47,7 @@ export enum ExperimentRunStatus {
 
 export type RecentExecutions = {
   experimentRunID: string;
-  resiliencyScore: number;
+  resiliencyScore: number | null;
   phase: ExperimentRunStatus;
   updatedAt: string;
   updatedBy: UserDetails;
